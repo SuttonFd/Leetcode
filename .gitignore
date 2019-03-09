@@ -19,6 +19,7 @@ buildNumber.properties
 *.iml
 /.idea/
 /out/
+/output/
 
 # BlueJ files
 *.ctxt
