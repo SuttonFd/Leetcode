@@ -79,9 +79,54 @@ public class _5LongestPalindromicSubstring {
         return s.substring(begin,begin+maxLen);
     }
 
+    /**
+     * 解法四：马拉车算法
+     * Manacher算法，时间复杂度O(n), 空间复杂度O(n)
+     * https://www.felix021.com/blog/read.php?2040
+     * Runtime: 11 ms, faster than 76.01%
+     * Memory Usage: 37.5 MB, less than 91.30%
+     */
+    private String preProcess(String s) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("$");
+        for(int i = 0;i <s.length();i++) {
+            sb.append("#");
+            sb.append(s.charAt(i));
+        }
+        sb.append("#");
+        return sb.toString();
+    }
+
+    public String longestPalindrome_Manacher(String s) {
+        if(s.length() <= 1) {
+            return s;
+        }
+        String str = preProcess(s);
+
+        int id = 0,mx = 0;
+        int maxId = 0,maxMx = 0;
+        int[] p = new int[str.length()];
+        for(int i = 1;i < str.length(); i++) {
+            int j = 2 * id - i;
+            p[i] = mx > i ? Math.min(p[j],mx - i) : 1;
+            while( (i + p[i]) < str.length() && str.charAt(i + p[i]) == str.charAt(i - p[i])) {
+                p[i] ++;
+            }
+            if(i + p[i] > mx) {
+                mx = p[i] + i;
+                id = i;
+            }
+            if(p[i] > maxMx) {
+                maxMx = p[i];
+                maxId = i;
+            }
+        }
+        return s.substring((maxId-maxMx)/2,(maxId+maxMx)/2-1);
+    }
+
     public static void main(String[] args) {
-        String s = "";
-        System.out.println(new _5LongestPalindromicSubstring().longestPalindrome_SimpleAlgorithm(s));
+        String s = "as";
+        System.out.println(new _5LongestPalindromicSubstring().longestPalindrome_Manacher(s));
     }
 
 }
